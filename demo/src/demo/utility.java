@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.*;
 import java.util.HashMap;
 import java.util.Properties;
 import javax.mail.Message;
@@ -98,6 +99,22 @@ public class utility {
 
     public static double getProfit(double price, long buyPrice) {
         return (price - buyPrice) * 10000;
+    }
+    
+    public static boolean isValidTime(){
+        Calendar cal = Calendar.getInstance(); //Create Calendar-Object
+        cal.setTime(new Date());               //Set the Calendar to now
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+
+        return hour <= 21 && hour >= 14;  
+    }
+    
+    public static void schedulerShutdown(){
+        try{
+      childScheduler.sched.shutdown();
+      } catch (Exception e) {
+            e.printStackTrace();
+    }
     }
 
     static void send(long phno, double price, double profit, String domain, String company) {
