@@ -8,7 +8,7 @@ package demo;
 import java.text.ParseException;
 import java.util.*;
 import org.json.simple.JSONObject;
-
+import java.text.SimpleDateFormat;
 import org.quartz.*;
 
 /**
@@ -17,6 +17,7 @@ import org.quartz.*;
  */
 public class masterScheduler {
     public static void main(String[] args) {
+        
     try {
             System.out.println("Initializing Master Scheduler");
             SchedulerFactory schedFact = new org.quartz.impl.StdSchedulerFactory();
@@ -38,14 +39,12 @@ public class masterScheduler {
             trigger.setCronExpression(
               "	0 0/2 * 1/1 * ? *"
             );
+            
             masterSched.scheduleJob(jobDetail, trigger);
           } catch (Exception e) {
             e.printStackTrace();
     }
 }
-    public static HashSet<String> getHolidays(){
-        HashSet<String> holidays = new HashSet<>();
-        
-        return holidays;
-    }
+    
+    
 }

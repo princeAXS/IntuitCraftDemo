@@ -186,4 +186,15 @@ public class utility {
             throw new RuntimeException(e);
         }
     }
+    public static HashSet<String> getHolidays(){
+        HashSet<String> holidays = new HashSet<>();
+        JSONObject holidaysData = getAPIData("http://holidayapi.com/v1/holidays?country=US&year=2016");
+        JSONObject dates = (JSONObject)holidaysData.get("holidays");
+
+        for(Iterator iterator = dates.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            holidays.add(key);
+        }
+        return holidays;
+    }
 }

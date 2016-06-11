@@ -7,7 +7,9 @@ package demo;
 
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 
 
 import org.quartz.*;
@@ -21,6 +23,7 @@ public class childScheduler implements Job{
         static Scheduler childSched;
         public void execute(JobExecutionContext context)
         throws JobExecutionException {
+         HashSet<String> holidays = utility.getHolidays();
          try {
           System.out.println("Initializing child scheduler");
           SchedulerFactory schedFact = new org.quartz.impl.StdSchedulerFactory();
@@ -43,7 +46,13 @@ public class childScheduler implements Job{
           trigger.setCronExpression(
            "0 0/1 * 1/1 * ? *"
           );
-          childSched.scheduleJob(jobDetail, trigger);
+          SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	   Date date = new Date();
+           
+          if(!holidays.contains(dateFormat.format(date)))
+            childSched.scheduleJob(jobDetail, trigger);
+          else
+            System.out.println("Today is holiday. Will check on next buisness day");
          } catch (Exception e) {
           e.printStackTrace();
          }
