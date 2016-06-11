@@ -1,6 +1,6 @@
 {
     "companyName" : "Intuit Inc",
-    "buyPrice" : 120,
+    "buyPrice" : 20,
     "minProfit" : 51,
     "phNo": 3237159868,
     "apiURL" : "http://dev.markitondemand.com/MODApis/Api/v2/Quote/json?symbol=INTU",
