@@ -6,6 +6,7 @@
 package demo;
 
 
+import static demo.childScheduler.childSched;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -56,10 +57,9 @@ public class utility {
         return null;
     }
 
-    public static JSONObject getAPIData(String apiURL, String symbol) {
+    public static JSONObject getAPIData(String apiURL) {
         try {
-
-            URL url = new URL(apiURL + "=" + symbol);
+            URL url = new URL(apiURL);
             //                System.out.println(url);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
@@ -102,16 +102,29 @@ public class utility {
     }
     
     public static boolean isValidTime(){
-        Calendar cal = Calendar.getInstance(); //Create Calendar-Object
-        cal.setTime(new Date());               //Set the Calendar to now
-        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        Calendar calendar = Calendar.getInstance();
+        TimeZone fromTimeZone = calendar.getTimeZone();
+        TimeZone toTimeZone = TimeZone.getTimeZone("EST");
 
-        return hour <= 21 && hour >= 14;  
+        calendar.setTimeZone(fromTimeZone);
+        calendar.add(Calendar.MILLISECOND, fromTimeZone.getRawOffset() * -1);
+        if (fromTimeZone.inDaylightTime(calendar.getTime())) {
+            calendar.add(Calendar.MILLISECOND, calendar.getTimeZone().getDSTSavings() * -1);
+        }
+
+        calendar.add(Calendar.MILLISECOND, toTimeZone.getRawOffset());
+        if (toTimeZone.inDaylightTime(calendar.getTime())) {
+            calendar.add(Calendar.MILLISECOND, toTimeZone.getDSTSavings());
+        }
+        
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+//        System.out.println(hour);
+        return hour >= 9 && hour <= 24;  
     }
     
     public static void schedulerShutdown(){
         try{
-      childScheduler.sched.shutdown();
+      childScheduler.childSched.deleteJob("Child scheduler", "schedulers");
       } catch (Exception e) {
             e.printStackTrace();
     }

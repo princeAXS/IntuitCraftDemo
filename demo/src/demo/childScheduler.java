@@ -12,38 +12,42 @@ import java.util.Date;
 
 import org.quartz.*;
 
-public class childScheduler {
+public class childScheduler implements Job{
 
-	/**
-	 * @param args
-	 */
-         static SchedulerFactory schedFact = new org.quartz.impl.StdSchedulerFactory();
-         static Scheduler sched;
-	public static void main(String[] args) {
-		try {
-            sched = schedFact.getScheduler();
-            sched.start();
-            JobDetail jobDetail = new JobDetail(
-                "Income Report",
-                "Report Generation",
-                HelloJob.class
-              );
-            jobDetail.getJobDataMap().put(
-                                      "type",
-                                      "FULL"
-                                     );
-            CronTrigger trigger = new CronTrigger(
-              "Income Report",
-              "Report Generation"
-            );
-            trigger.setCronExpression(
-              "0 0/1 * 1/1 * ? *"
-            );
-            sched.scheduleJob(jobDetail, trigger);
-          } catch (Exception e) {
-            e.printStackTrace();
-    }
-	}
+        public childScheduler() {
 
-	
+        }
+
+        static Scheduler childSched;
+        public void execute(JobExecutionContext context)
+        throws JobExecutionException {
+         try {
+          System.out.println("Initializing child scheduler");
+          SchedulerFactory schedFact = new org.quartz.impl.StdSchedulerFactory();
+          childSched = schedFact.getScheduler();
+          childSched.start();
+          JobDetail jobDetail = new JobDetail(
+           "Child scheduler",
+           "schedulers",
+           HelloJob.class
+          );
+          jobDetail.getJobDataMap().put(
+           "type",
+           "FULL"
+          );
+          CronTrigger trigger = new CronTrigger(
+           "Child scheduler",
+           "schedulers"
+          );
+          
+          trigger.setCronExpression(
+           "0 0/1 * 1/1 * ? *"
+          );
+          childSched.scheduleJob(jobDetail, trigger);
+         } catch (Exception e) {
+          e.printStackTrace();
+         }
+        }
+
+
 }
