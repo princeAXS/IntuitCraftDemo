@@ -50,21 +50,22 @@ public class HelloJob implements Job {
     
     //if min profit is acheived then it unschedule the job for the day
     if (newProfit >= (long) config.get("minProfit")) {
-     utility.send((long) config.get("phNo"), (double) apiData.get("LastPrice"), newProfit, (String) config.get("domain"), (String) config.get("companyName"));
+     utility.send((long) config.get("phNo"), currentPrice, newProfit, (String) config.get("domain"), (String) config.get("companyName"));
      System.out.println("Threshold profit acheived. exiting now....");
      utility.schedulerShutdown();
     } else {
 
      //if stock prices are going down or constant , wait time will be incresed to 2 times.statrs with 15 min
-     if (childScheduler.lastPrice >= currentPrice && childScheduler.waitTime < 60) {
-      childScheduler.waitTime = childScheduler.waitTime == 0 ? 15 : childScheduler.waitTime * 2;
+     if (childScheduler.lastPrice >= currentPrice) {
+      if(childScheduler.waitTime < 60)
+        childScheduler.waitTime = childScheduler.waitTime == 0 ? 15 : childScheduler.waitTime * 2;
       System.out.println("Cannot make any profit at this time. Will check again after" + childScheduler.waitTime + " mins");
       utility.rescheduleJob();
      } else {
       childScheduler.waitTime = 0;
-     }
-     System.out.println("Cannot make any profit at this time. Will check again after 15 mins");
-     childScheduler.lastPrice = currentPrice;
+        System.out.println("Cannot make any profit at this time. Will check again after 15 mins");
+        }
+      childScheduler.lastPrice = currentPrice;
 
     }
    }
