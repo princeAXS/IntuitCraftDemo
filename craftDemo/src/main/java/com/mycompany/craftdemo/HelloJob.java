@@ -51,7 +51,7 @@ public class HelloJob implements Job {
     //if min profit is acheived then it unschedule the job for the day
     if (newProfit >= (long) config.get("minProfit")) {
      utility.send((long) config.get("phNo"), currentPrice, newProfit, (String) config.get("domain"), (String) config.get("companyName"));
-     System.out.println("Threshold profit acheived. exiting now....");
+     System.out.println("Threshold profit achieved. exiting for now. Service will start next on next business day at 9.30 EST");
      utility.schedulerShutdown();
     } else {
 
