@@ -1,5 +1,14 @@
-package demo;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.mycompany.craftdemo;
 
+/**
+ *
+ * @author Prince
+ */
 import org.json.simple.JSONObject;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -31,7 +40,8 @@ public class HelloJob implements Job {
     System.out.println("Application has been started. Checking current prices");
     
     //getting configurations
-    String filePath = "C:\\Users\\uni5p_000\\Desktop\\IntuitCraftDemo\\demo\\src\\demo\\config.json";
+    String filePath = utility.getFilePath();
+    System.out.println(filePath);
     JSONObject config = utility.getConfig(filePath);
     JSONObject apiData = utility.getAPIData((String) config.get("apiURL"));
     Double currentPrice = (double) apiData.get("LastPrice");

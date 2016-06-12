@@ -1,14 +1,23 @@
-package demo;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.mycompany.craftdemo;
 
+/**
+ *
+ * @author Prince
+ */
 import org.quartz.*;
-
+import java.io.*;
 /**
  *
  * @author Prince
  */
 public class masterScheduler {
  public static void main(String[] args) {
-
+    
   try {
    System.out.println("Initializing Master Scheduler");
    SchedulerFactory schedFact = new org.quartz.impl.StdSchedulerFactory();

@@ -1,7 +1,16 @@
-package demo;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.mycompany.craftdemo;
 
-
+/**
+ *
+ * @author Prince
+ */
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -27,7 +36,12 @@ import org.json.simple.parser.ParseException;
  * @author Prince
  */
 public class utility {
-
+ public static String getFilePath(){
+    String basePath = new File("").getAbsolutePath();
+    int lastSlash = basePath.lastIndexOf("\\");
+    String result = basePath.substring(0, lastSlash);
+    return result+"\\config.json";
+ }
  public static JSONObject getConfig(String filePath) {
   try {
    // read the json file
