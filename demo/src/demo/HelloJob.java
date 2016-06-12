@@ -17,41 +17,45 @@ public class HelloJob implements Job {
 
  public void execute(JobExecutionContext context)
  throws JobExecutionException {
-     DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-	   //get current date time with Date()
-	   Date date = new Date();
-	   System.out.println(dateFormat.format(date));
-  
+  DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+  //get current date time with Date()
+  Date date = new Date();
+  System.out.println(dateFormat.format(date));
+
   try {
+      // unschedule the job if market is closed
    if (!utility.isValidTime()) {
     System.out.println("Stock market is closed. exiting... Will Get back tommorow at 9.30 AM EST");
     utility.schedulerShutdown();
    } else {
     System.out.println("Application has been started. Checking current prices");
+    
+    //getting configurations
     String filePath = "C:\\Users\\uni5p_000\\Desktop\\IntuitCraftDemo\\demo\\src\\demo\\config.json";
     JSONObject config = utility.getConfig(filePath);
     JSONObject apiData = utility.getAPIData((String) config.get("apiURL"));
-    Double currentPrice = (double)apiData.get("LastPrice");
+    Double currentPrice = (double) apiData.get("LastPrice");
     System.out.println("Current Price " + currentPrice);
     double newProfit = utility.getProfit(currentPrice, (long) config.get("buyPrice"));
-    if (newProfit > (long) config.get("minProfit")) {
+    
+    //if min profit is acheived then it unschedule the job for the day
+    if (newProfit >= (long) config.get("minProfit")) {
      utility.send((long) config.get("phNo"), (double) apiData.get("LastPrice"), newProfit, (String) config.get("domain"), (String) config.get("companyName"));
      System.out.println("Threshold profit acheived. exiting now....");
      utility.schedulerShutdown();
     } else {
-     
-     if(childScheduler.lastPrice >= currentPrice && childScheduler.waitTime<60){
-        childScheduler.waitTime = childScheduler.waitTime == 0?15:childScheduler.waitTime*2;
-        System.out.println("Cannot make any profit at this time. Will check again after"+childScheduler.waitTime+" mins");
-        utility.rescheduleJob();
-     }
-     else
-     {
-         childScheduler.waitTime = 0;
+
+     //if stock prices are going down or constant , wait time will be incresed to 2 times.statrs with 15 min
+     if (childScheduler.lastPrice >= currentPrice && childScheduler.waitTime < 60) {
+      childScheduler.waitTime = childScheduler.waitTime == 0 ? 15 : childScheduler.waitTime * 2;
+      System.out.println("Cannot make any profit at this time. Will check again after" + childScheduler.waitTime + " mins");
+      utility.rescheduleJob();
+     } else {
+      childScheduler.waitTime = 0;
      }
      System.out.println("Cannot make any profit at this time. Will check again after 15 mins");
      childScheduler.lastPrice = currentPrice;
-     
+
     }
    }
   } catch (NullPointerException e) {

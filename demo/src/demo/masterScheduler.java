@@ -14,6 +14,7 @@ public class masterScheduler {
    SchedulerFactory schedFact = new org.quartz.impl.StdSchedulerFactory();
    Scheduler masterSched = schedFact.getScheduler();
    masterSched.start();
+   //will trigger childScheduler
    JobDetail jobDetail = new JobDetail(
     "Master Scheduler",
     "Master schedulers",
@@ -27,6 +28,7 @@ public class masterScheduler {
     "Master Scheduler",
     "Master schedulers"
    );
+   // will trigger the job every week day at 6.30 AM
    trigger.setCronExpression(
     "0 30 6 ? * MON-FRI *"
    );

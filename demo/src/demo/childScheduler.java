@@ -24,6 +24,7 @@ public class childScheduler implements Job {
    SchedulerFactory schedFact = new org.quartz.impl.StdSchedulerFactory();
    childSched = schedFact.getScheduler();
    childSched.start();
+   // will trigger main application 
    jobDetail = new JobDetail(
     "Child scheduler",
     "schedulers",
@@ -37,7 +38,7 @@ public class childScheduler implements Job {
     "Child scheduler",
     "schedulers"
    );
-
+   // initially it will trigger the job after 15 mins
    trigger.setCronExpression(
     "0 0/15 * 1/1 * ? *"
    );

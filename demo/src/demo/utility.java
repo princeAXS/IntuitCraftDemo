@@ -22,7 +22,6 @@ import javax.mail.internet.MimeMessage;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.quartz.CronTrigger;
 /**
  *
  * @author Prince
@@ -54,7 +53,6 @@ public class utility {
  public static JSONObject getAPIData(String apiURL) {
   try {
    URL url = new URL(apiURL);
-   //                System.out.println(url);
    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
    conn.setRequestMethod("GET");
    conn.setRequestProperty("Accept", "application/json");
@@ -77,6 +75,7 @@ public class utility {
    } catch (ParseException ex) {
     ex.printStackTrace();
    }
+   //resturn api data in json format
    return json;
 
   } catch (MalformedURLException e) {
@@ -112,8 +111,8 @@ public class utility {
   }
 
   int hour = calendar.get(Calendar.HOUR_OF_DAY);
-  //        System.out.println(hour);
-  return hour >= 9 && hour <= 24;
+  
+  return hour >= 9 && hour <= 16;
  }
 
  public static void schedulerShutdown() {
@@ -124,11 +123,13 @@ public class utility {
   }
  }
 public static void rescheduleJob(){
-    // retrieve the trigger
+    // first unschedule the job
     schedulerShutdown();
     try {
    // thread to sleep for 1000 milliseconds
    Thread.sleep(childScheduler.waitTime*60*1000);
+   
+   //re assignment of job
    childScheduler.childSched.scheduleJob(childScheduler.jobDetail, childScheduler.trigger);
    
 
@@ -201,6 +202,7 @@ public static void rescheduleJob(){
    String key = (String) iterator.next();
    holidays.add(key);
   }
+  //returning holidays as a json object
   return holidays;
  }
 }
