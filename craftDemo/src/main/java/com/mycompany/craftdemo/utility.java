@@ -37,6 +37,7 @@ import org.json.simple.parser.ParseException;
  */
 public class utility {
  public static String getFilePath(){
+     //getting relative path for config file
     String basePath = new File("").getAbsolutePath();
     int lastSlash = basePath.lastIndexOf("\\");
     String result = basePath.substring(0, lastSlash);
@@ -216,7 +217,7 @@ public static void rescheduleJob(){
    String key = (String) iterator.next();
    holidays.add(key);
   }
-  //returning holidays as a json object
+  //returning holidays as a set
   return holidays;
  }
 }

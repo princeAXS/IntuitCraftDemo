@@ -26,8 +26,8 @@ public class HelloJob implements Job {
 
  public void execute(JobExecutionContext context)
  throws JobExecutionException {
+     
   DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-  //get current date time with Date()
   Date date = new Date();
   System.out.println(dateFormat.format(date));
 
@@ -41,11 +41,14 @@ public class HelloJob implements Job {
     
     //getting configurations
     String filePath = utility.getFilePath();
-    System.out.println(filePath);
     JSONObject config = utility.getConfig(filePath);
+    
+    //getting stock api data
     JSONObject apiData = utility.getAPIData((String) config.get("apiURL"));
     Double currentPrice = (double) apiData.get("LastPrice");
     System.out.println("Current Price " + currentPrice);
+    
+    //calculates the profit
     double newProfit = utility.getProfit(currentPrice, (long) config.get("buyPrice"));
     
     //if min profit is acheived then it unschedule the job for the day
@@ -53,18 +56,19 @@ public class HelloJob implements Job {
      utility.send((long) config.get("phNo"), currentPrice, newProfit, (String) config.get("domain"), (String) config.get("companyName"));
      System.out.println("Threshold profit achieved. exiting for now. Service will start next on next business day at 9.30 EST");
      utility.schedulerShutdown();
-    } else {
-
-     //if stock prices are going down or constant , wait time will be incresed to 2 times.statrs with 15 min
+    } 
+    else {
+     //if stock prices are going down or constant , wait time will be incresed to 2 times| starts with 15 min
      if (childScheduler.lastPrice >= currentPrice) {
       if(childScheduler.waitTime < 60)
         childScheduler.waitTime = childScheduler.waitTime == 0 ? 15 : childScheduler.waitTime * 2;
       System.out.println("Cannot make any profit at this time. Will check again after" + childScheduler.waitTime + " mins");
       utility.rescheduleJob();
-     } else {
+     } 
+     else {
       childScheduler.waitTime = 0;
-        System.out.println("Cannot make any profit at this time. Will check again after 15 mins");
-        }
+      System.out.println("Cannot make any profit at this time. Will check again after 15 mins");
+    }
       childScheduler.lastPrice = currentPrice;
 
     }

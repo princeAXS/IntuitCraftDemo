@@ -15,16 +15,17 @@ import java.util.HashSet;
 import org.quartz.*;
 
 public class childScheduler implements Job {
-
- public childScheduler() {
-
- }
- 
+    
  static double lastPrice = Double.MIN_VALUE;
  static int waitTime = 0;
  static Scheduler childSched;
  static JobDetail jobDetail;
  static CronTrigger trigger;
+ 
+ public childScheduler() {
+
+ }
+ 
  public void execute(JobExecutionContext context)
  throws JobExecutionException {
   HashSet < String > holidays = utility.getHolidays();
@@ -33,7 +34,7 @@ public class childScheduler implements Job {
    SchedulerFactory schedFact = new org.quartz.impl.StdSchedulerFactory();
    childSched = schedFact.getScheduler();
    childSched.start();
-   // will trigger main application 
+   // will trigger main application as its job 
    jobDetail = new JobDetail(
     "Child scheduler",
     "schedulers",
@@ -53,7 +54,8 @@ public class childScheduler implements Job {
    );
    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
    Date date = new Date();
-
+   
+   //checks for holiday, if today is holiday it skips the excecution of application for today
    if (!holidays.contains(dateFormat.format(date)))
     childSched.scheduleJob(jobDetail, trigger);
    else

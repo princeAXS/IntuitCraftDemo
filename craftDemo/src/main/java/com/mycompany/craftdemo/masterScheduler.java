@@ -10,20 +10,19 @@ package com.mycompany.craftdemo;
  * @author Prince
  */
 import org.quartz.*;
-//import java.util.Calender;
 /**
  *
  * @author Prince
  */
 public class masterScheduler {
  public static void main(String[] args) {
-    java.util.Calendar futureDate = java.util.Calendar.getInstance();
+   java.util.Calendar futureDate = java.util.Calendar.getInstance();
   try {
    System.out.println("Initializing Master Scheduler");
    SchedulerFactory schedFact = new org.quartz.impl.StdSchedulerFactory();
    Scheduler masterSched = schedFact.getScheduler();
    masterSched.start();
-   //will trigger childScheduler
+   //will trigger childScheduler as its job
    JobDetail jobDetail = new JobDetail(
     "Master Scheduler",
     "Master schedulers",
@@ -41,9 +40,11 @@ public class masterScheduler {
    trigger.setCronExpression(
     "0 30 6 ? * MON-FRI *"
    );
+   //if its weekend then job is schedule for business day
    if(java.util.Calendar.DAY_OF_WEEK == 6 || java.util.Calendar.DAY_OF_WEEK == 7)
         System.out.println("Today is holiday. Will check on next buisness day");
    else{
+       //it will trigger the job immediately if user starts after the 6.30 pm PST
        if(java.util.Calendar.HOUR>6 && java.util.Calendar.MINUTE >30){
         futureDate.set(java.util.Calendar.HOUR_OF_DAY, 6);
         futureDate.set(java.util.Calendar.MINUTE, 29);
