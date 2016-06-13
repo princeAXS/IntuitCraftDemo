@@ -31,6 +31,7 @@ import javax.mail.internet.MimeMessage;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import java.text.SimpleDateFormat;
 /**
  *
  * @author Prince
@@ -220,4 +221,25 @@ public static void rescheduleJob(){
   //returning holidays as a set
   return holidays;
  }
+ 
+public static boolean compareDates(String compare){
+    try{
+    Calendar now = Calendar.getInstance();
+    SimpleDateFormat inputParser = new SimpleDateFormat("HH:mm", Locale.US);
+
+    int hour = now.get(Calendar.HOUR_OF_DAY);
+    int minute = now.get(Calendar.MINUTE);
+    
+    
+    Date date = inputParser.parse(hour + ":" + minute);
+    Date dateCompareOne = inputParser.parse(compare);
+    
+    return dateCompareOne.before(date);
+    } catch (java.text.ParseException e) {
+        return false;
+    }
+
+    }
 }
+
+

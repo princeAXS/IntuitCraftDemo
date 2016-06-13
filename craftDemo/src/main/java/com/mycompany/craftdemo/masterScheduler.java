@@ -40,17 +40,20 @@ public class masterScheduler {
    trigger.setCronExpression(
     "0 30 6 ? * MON-FRI *"
    );
+
    //if its weekend then job is schedule for business day
    if(java.util.Calendar.DAY_OF_WEEK == 6 || java.util.Calendar.DAY_OF_WEEK == 7)
         System.out.println("Today is holiday. Will check on next buisness day");
    else{
        //it will trigger the job immediately if user starts after the 6.30 pm PST
-       if(java.util.Calendar.HOUR>6 && java.util.Calendar.MINUTE >30){
+       if(utility.compareDates("06:30")){
         futureDate.set(java.util.Calendar.HOUR_OF_DAY, 6);
         futureDate.set(java.util.Calendar.MINUTE, 29);
         futureDate.set(java.util.Calendar.SECOND, 30);
         trigger.setStartTime(futureDate.getTime());
        }
+       else
+           System.out.println("Application has been schedule to run at 6.30 PST");
        }
    
    
