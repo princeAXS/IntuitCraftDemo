@@ -3,6 +3,13 @@ Java project for routine check for stock price of particular company using a sto
 
 # How to operate it.
 
+1.) Download and unzip the project.
+2.) Import this project as an existing maven project
+3.) User has to add following dependencies
+    - javax.mail-api-14.3.jar
+    - json0simple-1.1.1.jar
+    - quartz-1.0.7
+
 # Expected Output
 Case 1: if today is holiday
 
